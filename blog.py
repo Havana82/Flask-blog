@@ -1,7 +1,14 @@
 from flask import Flask, render_template
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "UOFKGKHMGJBCHCGFJHH"
 
+class UserName(FlaskForm):
+    name = StringField('Enter Username', validators = [DataRequired()])
+    submit = SubmitField('Submit')
 @app.route('/')
 
 def index():
@@ -17,3 +24,12 @@ def user(name):
 
 def page_not_found(e):
     return render_template("404.html"), 404
+
+@app.route('/username', methods=['GET','POST'])
+def user_name():
+    name = None
+    form = UserName()
+    if form.validate_on_submit():
+        name = form.name.data
+        form.name.data = ''
+    return render_template("username.html", name = name, form = form)
