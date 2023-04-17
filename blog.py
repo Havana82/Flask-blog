@@ -7,8 +7,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SECRET_KEY'] = "UOFKGKHMGJBCHCGFJHH"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///face_blog.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'KHGLYTDKTEASRYDTFL'
 
 db = SQLAlchemy(app)
 
@@ -23,11 +24,24 @@ class Users(db.Model):
     def __repr__(self):
         return self.name
 
-        
-
+if __name__ == '__main__':
+    app.run(debug=True)    
+class UserLog(FlaskForm):
+    name = StringField('Enter Username', validators = [DataRequired()])
+    email = StringField('Email', validators = [DataRequired()])
+    submit = SubmitField('Submit')
+    
 class UserName(FlaskForm):
     name = StringField('Enter Username', validators = [DataRequired()])
     submit = SubmitField('Submit')
+    
+@app.route('/user/add', methods=['GET', 'POST'])
+
+def add_user():
+    form = UserLog
+    name= None
+    email= None
+    return render_template("add_user.html",form=form, name=name, email=email)
 @app.route('/')
 
 def index():
